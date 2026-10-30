@@ -1,0 +1,511 @@
+/* ==========================================================================
+   Personal Archive - Desktop 1440 // Lee Ho Kan
+   Pure Static Implementation (Collision-Free Responsive Auto Layout)
+   Strictly no animations, no transitions, no reactive gimmicks.
+   ========================================================================== */
+
+:root {
+  --bg-canvas: #ffffff;
+  --ink-primary: #1a202c;
+  --divider-color: rgba(26, 32, 44, 0.65);
+  --lime-accent: #ccff00;
+  --font-mono: "IBM Plex Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* --------------------------------------------------------------------------
+   Global Reset & Page Foundation
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-canvas);
+  color: var(--ink-primary);
+  font-family: var(--font-mono);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.viewport-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: var(--bg-canvas);
+}
+
+.canvas-frame {
+  position: relative;
+  width: 100%;
+  min-height: 815px;
+  height: max(100vh, 815px);
+  background-color: var(--bg-canvas);
+  overflow: hidden;
+  user-select: text;
+}
+
+/* --------------------------------------------------------------------------
+   Typography & Dividers
+   -------------------------------------------------------------------------- */
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+
+.section-heading .title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--ink-primary);
+}
+
+.section-heading .count {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 17px;
+  letter-spacing: 0;
+  color: var(--ink-primary);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--divider-color);
+  margin-top: 5px;
+  margin-bottom: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   1. Section: Project (8)
+   -------------------------------------------------------------------------- */
+.block-project {
+  position: absolute;
+  left: clamp(24px, 2.5vw, 36px);
+  top: clamp(24px, 4.4vh, 36px);
+  width: clamp(280px, 22.2vw, 320px);
+  z-index: 20;
+}
+
+.divider-project {
+  width: 100%;
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-row {
+  line-height: 16px;
+}
+
+.project-anchor {
+  color: var(--ink-primary);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 400;
+  display: inline-block;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.project-anchor .num {
+  text-decoration: none;
+}
+
+.project-anchor .name {
+  text-decoration: none;
+  border-bottom: 1.5px solid transparent;
+  padding-bottom: 1px;
+  transition: border-bottom-color 0.1s ease;
+}
+
+.project-anchor:hover .name {
+  border-bottom-color: var(--ink-primary);
+}
+
+/* --------------------------------------------------------------------------
+   2. Section: Contact
+   -------------------------------------------------------------------------- */
+.block-contact {
+  position: absolute;
+  left: clamp(24px, 2.5vw, 36px);
+  bottom: clamp(24px, 5.4vh, 44px);
+  width: clamp(220px, 19.2vw, 276px);
+  z-index: 20;
+}
+
+.divider-contact {
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 11px;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.contact-anchor {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink-primary);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.contact-anchor .label {
+  border-bottom: 1.5px solid transparent;
+  padding-bottom: 1px;
+  transition: border-bottom-color 0.1s ease;
+}
+
+.contact-anchor:hover .label {
+  border-bottom-color: var(--ink-primary);
+}
+
+.contact-anchor .emoji {
+  font-size: 11px;
+  width: 11px;
+  height: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   3. Central Narrative Container: Manifesto + Grenade
+   Desktop (>= 1200px): Side-by-side with automatic gap
+   -------------------------------------------------------------------------- */
+.manifesto-grenade-zone {
+  position: absolute;
+  left: clamp(280px, 22.36vw, 322px);
+  top: clamp(230px, 31.04vh, 253px);
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(18px, 2vw, 32px);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.manifesto-card {
+  position: relative;
+  width: clamp(280px, 21vw, 303px);
+  margin-top: 71px; /* Exact 324px vs 253px offset */
+  color: var(--ink-primary);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: pre-line;
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+.artifact-grenade {
+  position: relative;
+  width: clamp(220px, 17.5vw, 275px);
+  aspect-ratio: 215 / 323;
+  flex-shrink: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   4. Section: Button - desigh me
+   Maintained strictly in horizontal center (left: 50%, translateX(-50%))
+   -------------------------------------------------------------------------- */
+.desigh-button-anchor {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: clamp(35px, 6.5vh, 65px);
+  width: 143px;
+  height: 100px;
+  z-index: 25;
+}
+
+.desigh-capsule-btn {
+  width: 143px;
+  height: 100px;
+  border-radius: 999px;
+  border: 1px solid rgba(26, 32, 44, 0.85);
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--ink-primary);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.desigh-capsule-btn:hover {
+  background-color: var(--lime-accent);
+  color: var(--ink-primary);
+  border-color: var(--lime-accent);
+}
+
+/* --------------------------------------------------------------------------
+   5. Section: Disciplines (4)
+   -------------------------------------------------------------------------- */
+.block-disciplines {
+  position: absolute;
+  right: clamp(260px, 23.2vw, 340px);
+  top: clamp(24px, 4.4vh, 36px);
+  width: clamp(240px, 19.16vw, 276px);
+  z-index: 20;
+}
+
+.divider-disciplines {
+  width: 100%;
+}
+
+.discipline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.discipline-row {
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink-primary);
+}
+
+/* --------------------------------------------------------------------------
+   6. Section: Curiosities (7)
+   Pinned Right: Always right-aligned, never cut off
+   -------------------------------------------------------------------------- */
+.block-curiosities {
+  position: absolute;
+  right: clamp(20px, 2.08vw, 30px);
+  top: clamp(170px, 25.15vh, 215px);
+  width: clamp(240px, 18.4vw, 265px);
+  z-index: 20;
+}
+
+.divider-curiosities {
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 13px;
+}
+
+.curiosity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.curiosity-row {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink-primary);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   7. Spatial Artifact Boxes (Desktop)
+   -------------------------------------------------------------------------- */
+.artifact-box {
+  pointer-events: none;
+}
+
+.artifact-box img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* 1. Cap: x: 308px, y: 18px, 403 × 285 px */
+.artifact-cap {
+  position: absolute;
+  left: clamp(260px, 21.39vw, 315px);
+  top: clamp(10px, 2.21vh, 20px);
+  width: clamp(320px, 27.99vw, 405px);
+  aspect-ratio: 403 / 285;
+  z-index: 8;
+}
+
+/* 2. Headphones: left: 0px, top: 282px, 334 × 363 px */
+.artifact-headphones {
+  position: absolute;
+  left: 0;
+  top: clamp(240px, 34.6vh, 285px);
+  width: clamp(260px, 23.19vw, 335px);
+  aspect-ratio: 334 / 363;
+  z-index: 14;
+}
+
+/* 3. Perfume Bottle: x: 198px, bottom: 2px, 303 × 363 px */
+.artifact-perfume {
+  position: absolute;
+  left: clamp(150px, 13.75vw, 205px);
+  bottom: clamp(0px, 0.25vh, 10px);
+  width: clamp(240px, 21.04vw, 305px);
+  aspect-ratio: 303 / 363;
+  z-index: 31;
+}
+
+/* 5. CD Player / Radio: Enlarged & Pinned to Bottom-Right Diagonal (對角位) */
+.artifact-radio {
+  position: absolute;
+  right: clamp(140px, 14.5vw, 220px);
+  bottom: clamp(40px, 7.5vh, 75px);
+  width: clamp(340px, 28.5vw, 435px);
+  aspect-ratio: 369 / 407;
+  z-index: 45;
+}
+
+/* 6. Apple iPod Mini: Pinned Top-Right (對角位) */
+.artifact-ipod {
+  position: absolute;
+  right: clamp(140px, 13.26vw, 195px);
+  top: clamp(6px, 1.1vh, 12px);
+  width: clamp(95px, 8.61vw, 126px);
+  aspect-ratio: 124 / 190;
+  z-index: 7;
+}
+
+/* 7. Oval Charm Pebble */
+.artifact-charm-pebble {
+  position: absolute;
+  right: clamp(260px, 23.19vw, 338px);
+  top: clamp(160px, 23.8vh, 200px);
+  width: clamp(90px, 8.26vw, 120px);
+  aspect-ratio: 119 / 98;
+  z-index: 11;
+}
+
+/* 8. Cassette Tape: Pinned Bottom-Right Corner (對角位) */
+.artifact-cassette {
+  position: absolute;
+  right: clamp(20px, 3.12vw, 45px);
+  bottom: clamp(12px, 2.45vh, 24px);
+  width: clamp(170px, 15.21vw, 222px);
+  aspect-ratio: 219 / 157;
+  z-index: 9;
+}
+
+@media (max-width: 1180px) {
+  .canvas-frame {
+    height: auto;
+    min-height: 980px;
+    overflow-y: visible;
+  }
+
+  .block-project {
+    left: 24px;
+    top: 24px;
+    width: 270px;
+  }
+
+  .artifact-headphones {
+    left: -25px;
+    top: 270px;
+    width: 230px;
+  }
+
+  .block-contact {
+    left: 24px;
+    bottom: 24px;
+    width: 200px;
+  }
+
+  .artifact-perfume {
+    left: 160px;
+    bottom: 10px;
+    width: 230px;
+  }
+
+  .manifesto-grenade-zone {
+    left: clamp(270px, 30vw, 330px);
+    top: 280px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .manifesto-card {
+    margin-top: 0;
+    width: clamp(260px, 28vw, 300px);
+  }
+
+  .artifact-grenade {
+    width: clamp(190px, 22vw, 240px);
+    margin-left: 10px;
+  }
+
+  .artifact-cap {
+    left: clamp(230px, 25vw, 300px);
+    top: 12px;
+    width: clamp(250px, 26vw, 330px);
+  }
+
+  .block-disciplines {
+    right: clamp(140px, 16vw, 210px);
+    top: 24px;
+    width: 200px;
+  }
+
+  .artifact-ipod {
+    right: 20px;
+    top: 10px;
+    width: 95px;
+  }
+
+  .artifact-charm-pebble {
+    right: clamp(170px, 19vw, 230px);
+    top: 175px;
+    width: 90px;
+  }
+
+  .block-curiosities {
+    right: 20px;
+    top: 195px;
+    width: 220px;
+  }
+
+  .artifact-radio {
+    right: clamp(90px, 11vw, 150px);
+    bottom: 60px;
+    width: clamp(270px, 30vw, 360px);
+  }
+
+  .artifact-cassette {
+    right: 20px;
+    bottom: 18px;
+    width: clamp(160px, 18vw, 200px);
+  }
+
+  .desigh-button-anchor {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 30px;
+  }
+}
